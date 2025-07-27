@@ -14,8 +14,8 @@ This repository contains benchmarks comparing the performance of `Identifiable`-
 **Test Configuration:**
 - **Test Object:** `Company` with 1,000+ employees
 - **Nesting:** 3 levels deep (Company → Employees → Profile)
-- **Iterations:** 1,000,000 (scaled from 1,000 for slower operations)
-- **Environment:** Release build, M1 Pro, macOS 14.0
+- **Iterations:** 1,000,000
+- **Environment:** Release build, MacBook Air M4, macOS Tahoe 26.0
 
 ## Getting Started
 
@@ -69,11 +69,11 @@ The benchmark creates a complex object graph with:
 
 ## Implementation Notes
 
-- The benchmark uses `CACurrentMediaTime()` for high-precision timing
+- The benchmark uses Apple's [https://github.com/apple/swift-collections-benchmark](https://github.com/apple/swift-collections-benchmark)
 - Includes warm-up runs to account for system optimizations
 - Results are averaged over multiple iterations
 - Memory usage is monitored to ensure consistent testing conditions
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+You can use this library in any form.
