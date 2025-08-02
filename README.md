@@ -1,79 +1,55 @@
-# Benchmark: Equatable and Hashable with ID
+# Performance Benchmark: Equatable & Hashable with Identifiable
 
-This repository contains benchmarks comparing the performance of `Identifiable`-based `Equatable`/`Hashable` implementations versus compiler-synthesized implementations in Swift. The benchmarks demonstrate the performance characteristics of each approach when working with complex object graphs.
+This project benchmarks the performance of `Equatable` and `Hashable` conformances in Swift, comparing the default synthesized implementations with a manual implementation that leverages the `Identifiable` protocol.
 
-## Key Findings
+## The Experiment
 
-| Metric                      | Identifiable-based | Synthesized | Speedup |
-|-----------------------------|-------------------|-------------|---------|
-| **Equality Comparison**     | 3.18ms            | 0.01ms      | 4.3x    |
-| **Hashing Operation**       | 13.44ms           | 225.84ms    | 16.8x   |
-| **Operations/second**       | 74.4M             | 4,428       | -       |
-| **Complexity**              | O(1)              | O(n)        | -       |
+The goal is to measure the performance difference when comparing and hashing complex objects.
 
-**Test Configuration:**
-- **Test Object:** `Company` with 1,000+ employees
-- **Nesting:** 3 levels deep (Company → Employees → Profile)
-- **Iterations:** 1,000,000 (scaled from 1,000 for slower operations)
-- **Environment:** Release build, M1 Pro, macOS 14.0
+- **Synthesized Method:** The compiler automatically generates the `==` and `hash(into:)` methods. This is convenient but requires checking every property of the object.
+- **Identifiable Method:** We manually implement `==` and `hash(into:)` to only use the `id` property. This is possible because if two objects have the same unique ID, they can be considered equal.
 
-## Getting Started
+## Methodology
 
-### Prerequisites
+To ensure a fair and direct comparison, all benchmark cases are run for the **same number of iterations (1,000,000)**. The total elapsed time for each test is measured, and the speedup is calculated by taking a direct ratio of these times.
 
-- Swift 6.1+
+This project uses a custom benchmarking solution implemented directly in `main.swift`.
 
-### Installation
+**Note on Hashable Benchmarks:** The `Hashable` benchmarks now accurately measure the full cost of hashing each object, including the initialization and finalization of the `Hasher` for every iteration. This provides a more realistic representation of real-world hashing performance.
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/erkekin/benchmark-equatable-and-hashable-with-id.git
-   cd benchmark-equatable-and-hashable-with-id
-   ```
+## Final Results
 
-2. Build the benchmark in release mode:
-   ```bash
-   swift build -c release
-   ```
+Here is a summary of the final benchmark run:
 
-## Understanding the Results
+| Test Case                              | Time (ms)        |
+| -------------------------------------- | ---------------- |
+| 1. Equatable w/ Identifiable           | 1.22             |
+| 2. Equatable (Synthesized)             | 3.83             |
+| 3. Equatable (Synthesized, Identical)  | 11.61            |
+| 4. Hashable w/ Identifiable            | 6.44             |
+| 5. Hashable (Synthesized)              | 195,413.01       |
 
-The benchmark compares two implementations:
+### Performance Comparison
 
-1. **Identifiable-based Implementation**:
-   - Uses only the `id` property for equality and hashing
-   - Implements `Equatable` and `Hashable` through protocol extensions
-   - Maintains O(1) complexity regardless of object size
+- **Synthesized Equatable is 3.14x slower** than the `Identifiable`-based implementation.
+- **Synthesized Hashable is 30,345.40x slower** than the `Identifiable`-based implementation.
 
-2. **Synthesized Implementation**:
-   - Uses compiler-synthesized `Equatable` and `Hashable`
-   - Compares/hashes all properties
-   - Has O(n) complexity where n is the number of properties
+## Conclusion
 
-## Benchmark Details
+For complex objects, relying on the synthesized implementations of `Equatable` and `Hashable` can lead to significant performance bottlenecks, especially for hashing.
 
-The benchmark creates a complex object graph with:
-- A `Company` struct with 1,000+ employees
-- Each employee has a profile with multiple properties
-- Nested dictionaries and arrays to simulate real-world complexity
+By conforming to `Identifiable` and implementing a custom `==` and `hash(into:)` that only uses the `id`, you can achieve dramatic performance gains. This is a critical optimization to consider for any application that frequently compares or stores complex objects in collections like `Set` or `Dictionary`.
 
-### Test Cases
+## How to Run the Benchmark
 
-1. **Equality Comparison**:
-   - Measures time to compare two identical objects
-   - Tests both `==` operator implementations
+To reproduce these results:
 
-2. **Hashing Operation**:
-   - Measures time to compute hash values
-   - Tests both `hash(into:)` implementations
+1.  **Build in release mode:**
+    ```sh
+    swift build -c release
+    ```
 
-## Implementation Notes
-
-- The benchmark uses `CACurrentMediaTime()` for high-precision timing
-- Includes warm-up runs to account for system optimizations
-- Results are averaged over multiple iterations
-- Memory usage is monitored to ensure consistent testing conditions
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+2.  **Run the benchmark executable:**
+    ```sh
+    ./.build/release/benchmark
+    ```
