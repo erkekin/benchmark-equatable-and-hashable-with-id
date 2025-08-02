@@ -49,7 +49,8 @@ func generateTestData() -> (
     
     let equatable2 = CompanyEquatableOnly(
         id: id1, name: "Different Name", foundedDate: Date(), address: address,
-        employees: employees, metadata: metadata, stockSymbol: "DIFF"
+        employees: employees.reversed(), metadata: ["different": "value"],
+        stockSymbol: "DIFF"
     )
     
     // Identical copy of equatable1

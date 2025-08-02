@@ -13,7 +13,7 @@ The goal is to measure the performance difference when comparing and hashing com
 
 To ensure a fair and direct comparison, all benchmark cases are run for the **same number of iterations (1,000,000)**. The total elapsed time for each test is measured, and the speedup is calculated by taking a direct ratio of these times.
 
-This method, while slower to run, provides a clear and unambiguous measure of the performance difference.
+This project uses a custom benchmarking solution implemented directly in `main.swift`.
 
 ## Final Results
 
@@ -21,16 +21,16 @@ Here is a summary of the final benchmark run:
 
 | Test Case                              | Time (ms)        |
 | -------------------------------------- | ---------------- |
-| 1. Equatable w/ Identifiable           | 3.30             |
-| 2. Equatable (Synthesized)             | 8.20             |
-| 3. Equatable (Synthesized, Identical)  | 17.55            |
-| 4. Hashable w/ Identifiable            | 8.56             |
-| 5. Hashable (Synthesized)              | 193,534.62       |
+| 1. Equatable w/ Identifiable           | 1.23             |
+| 2. Equatable (Synthesized)             | 3.86             |
+| 3. Equatable (Synthesized, Identical)  | 11.75            |
+| 4. Hashable w/ Identifiable            | 6.34             |
+| 5. Hashable (Synthesized)              | 192,813.37       |
 
 ### Performance Comparison
 
-- **Synthesized Equatable is 2.49x slower** than the `Identifiable`-based implementation.
-- **Synthesized Hashable is 22,622.18x slower** than the `Identifiable`-based implementation.
+- **Synthesized Equatable is 3.14x slower** than the `Identifiable`-based implementation.
+- **Synthesized Hashable is 30,429.80x slower** than the `Identifiable`-based implementation.
 
 ## Conclusion
 
