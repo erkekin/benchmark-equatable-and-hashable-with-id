@@ -15,22 +15,24 @@ To ensure a fair and direct comparison, all benchmark cases are run for the **sa
 
 This project uses a custom benchmarking solution implemented directly in `main.swift`.
 
+**Note on Hashable Benchmarks:** The `Hashable` benchmarks now accurately measure the full cost of hashing each object, including the initialization and finalization of the `Hasher` for every iteration. This provides a more realistic representation of real-world hashing performance.
+
 ## Final Results
 
 Here is a summary of the final benchmark run:
 
 | Test Case                              | Time (ms)        |
 | -------------------------------------- | ---------------- |
-| 1. Equatable w/ Identifiable           | 1.23             |
-| 2. Equatable (Synthesized)             | 3.86             |
-| 3. Equatable (Synthesized, Identical)  | 11.75            |
-| 4. Hashable w/ Identifiable            | 6.34             |
-| 5. Hashable (Synthesized)              | 192,813.37       |
+| 1. Equatable w/ Identifiable           | 1.22             |
+| 2. Equatable (Synthesized)             | 3.83             |
+| 3. Equatable (Synthesized, Identical)  | 11.61            |
+| 4. Hashable w/ Identifiable            | 6.44             |
+| 5. Hashable (Synthesized)              | 195,413.01       |
 
 ### Performance Comparison
 
 - **Synthesized Equatable is 3.14x slower** than the `Identifiable`-based implementation.
-- **Synthesized Hashable is 30,429.80x slower** than the `Identifiable`-based implementation.
+- **Synthesized Hashable is 30,345.40x slower** than the `Identifiable`-based implementation.
 
 ## Conclusion
 

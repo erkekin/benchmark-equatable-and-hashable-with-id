@@ -108,18 +108,18 @@ func runBenchmarks() {
             }
         },
         BenchmarkCase(name: "4. Hashable w/ Identifiable") {
-            var hasher = Hasher()
             for _ in 0..<iterations {
+                var hasher = Hasher()
                 testData.identifiable1.hash(into: &hasher)
+                _ = hasher.finalize()
             }
-            _ = hasher.finalize()
         },
         BenchmarkCase(name: "5. Hashable (Synthesized)") {
-            var hasher = Hasher()
             for _ in 0..<iterations {
+                var hasher = Hasher()
                 testData.equatable1.hash(into: &hasher)
+                _ = hasher.finalize()
             }
-            _ = hasher.finalize()
         }
     ]
 
